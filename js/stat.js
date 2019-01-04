@@ -2,35 +2,16 @@
 
 var CLOUD_WIDTH = 420;
 var CLOUD_HEIGHT = 270;
-
 var CORD_X = 100;
 var CORD_Y = 10;
-
-var CLOUD_X = 120;
-var CLOUD_Y = 150;
-
-var GAP = 50;
-var FONT_GAP = 16;
+var CLOUD_FONT = '16px PT Mono';
 var TEXT_WIDTH = 40;
-var TEXT_HEIGHT = 20;
 var BAR_WIDTH = 40;
 var barHeight = 150;
-
-var CONGRATULAION_GAP_LEFT = 20;
-var CONGRATULAION_GAP_UP = 30;
-var CONGRATULAION_FONT_GAP = 20;
-
 
 var renderCloud = function(ctx, x, y, color) {
   ctx.fillStyle = color;
   ctx.fillRect(CORD_X, CORD_Y, CLOUD_WIDTH, CLOUD_HEIGHT);
-};
-
-var renderCongratulation = function (ctx, x, y, color, font) {
-  ctx.fillStyle = color;
-  ctx.font = font;
-  ctx.fillText('Ура вы победили!', x + CONGRATULAION_GAP_LEFT, y + CONGRATULAION_GAP_UP);
-  ctx.fillText('Список результатов:', x + CONGRATULAION_GAP_LEFT, y + CONGRATULAION_GAP_UP + CONGRATULAION_FONT_GAP);
 };
 
 var getMaxElement = function(arr) {
@@ -41,7 +22,6 @@ var getMaxElement = function(arr) {
       maxElement = arr[i];
     }
   }
-
   return maxElement;
 };
 
@@ -53,6 +33,9 @@ window.renderStatistics = function(ctx, players, times) {
 
   var maxTime = getMaxElement(times);
 
+  ctx.font = CLOUD_FONT;
+  ctx.fillText('Ура вы победили!', CORD_X + 20, CORD_Y + 30);
+  ctx.fillText('Список результатов:', CORD_X + 20, CORD_Y + 45);
 
 
   for (var i = 0; i < players.length; i++) {
@@ -64,7 +47,12 @@ window.renderStatistics = function(ctx, players, times) {
       ctx.fillStyle = color;
     }
 
-    ctx.fillText(players[i], CLOUD_WIDTH / players.length * i + CORD_X + BAR_WIDTH, 260);
-    ctx.fillRect(CLOUD_WIDTH / players.length * i + CORD_X + BAR_WIDTH, CLOUD_Y / 2, TEXT_WIDTH, (barHeight * times[i]) / maxTime);
+    var currBarX = CLOUD_WIDTH / players.length * i + CORD_X + BAR_WIDTH;
+    var currBarHeight = barHeight * times[i] / maxTime;
+    var currBarY = 240 - currBarHeight;
+
+    ctx.fillText(players[i], currBarX, 260);
+    ctx.fillRect(currBarX, currBarY, TEXT_WIDTH, currBarHeight);
+    ctx.fillText(Math.round(times[i]), currBarX, currBarY - 10);
   }
 };
